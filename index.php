@@ -1,7 +1,5 @@
 <?php
 
-// Bypasssing WAFF By Tegalxploiter
-
 error_reporting(0);
 @ini_set('display_errors', '0');
 @ini_set('memory_limit', '512M');
